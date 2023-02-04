@@ -154,7 +154,7 @@ bool found = false;
 bool SpoofingAppleKeyboard = false;
 void setup() {
 
-  pinMode(lightPin, OUTPUT);
+  pinMode(lightPin, OUTPUT); // only a blinking light
 
   // USB_VID = 0x05ac
   // USB_PID = 0x0267
