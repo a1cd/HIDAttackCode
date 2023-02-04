@@ -1,28 +1,5 @@
-// #include <Arduino_JSON.h>
-
-// #include "Mouse.h"
-// #include "Keyboard.h"
-// #define HID_CUSTOM_LAYOUT
-// #define LAYOUT_US_ENGLISH
-
-// #include "ArduinoLowPower.h"
 #include "HID-Project.h"
-// #include <USB/USB_host.h>
 #include "Usb.h"
-// #include "./Keyboard/SpecialHID.h"
-
-// class Keyboard_: public Keyboard_  {
-//   public:
-//     HID_KeyboardReport_Data_t _keyReport;
-//     HID_KeyboardReport_Data_t getKeyReport();
-    
-// };
-// HID_KeyboardReport_Data_t Keyboard_::getKeyReport(){
-//   return this -> _keyReport;
-// }
-// Keyboard_ Keyboard;
-
-
 
 void wait(unsigned long dwMs) {
   unsigned long startWaitTime = millis();
@@ -65,10 +42,6 @@ void setLight(bool state) {
     light = false;
   }
 }
-
-// void waitUntil(unsigned long dwMs, void (*action)) {
-//   action(arg)
-// }
 
 void shortcut(KeyboardKeycode first, KeyboardKeycode second, unsigned long timeMultiplier = 1) {
   
@@ -145,7 +118,6 @@ void toggleKeyboardAccess(bool endWait = true, unsigned long timeMultiplier = 1)
 }
 void quickOpenTerminal() {
   toggleKeyboardAccess(true, 4); //7 if fail
-  // wait(300);
   shortcut(KEY_LEFT_CTRL, KEY_F3, 1);
   wait(30);
 
@@ -178,34 +150,26 @@ long startPayload = 0;
 long endPayload = 0;
 long end = 0;
 
-// USBHost usb;
-
 bool found = false;
 bool SpoofingAppleKeyboard = false;
 void setup() {
 
-  pinMode(lightPin, OUTPUT);
+  pinMode(lightPin, OUTPUT); // only a blinking light
 
   // USB_VID = 0x05ac
   // USB_PID = 0x0267
   
   // open the serial port:
   Serial.begin(9600);
-  // Serial.println("Write!");
   // initialize control over the keyboard:
   Keyboard.begin();
   AbsoluteMouse.begin();
-  // Consumer.begin();
-  // unsigned char led = SpecialHID.getLeds()[0];
 
-  // Consumer.press(HID_CONSUMER_AL_COMMAND_LINE_PROCESSOR_SLASH_RUN);
-
-  if (USB_VID == 0x05ac && USB_PID == 0x0267) {
+  if (USB_VID == 0x05ac && USB_PID == 0x0267) { // check if USB VID and PID are set to the VID and PID of an apple keyboard
     SpoofingAppleKeyboard = true;
   } else {
     SpoofingAppleKeyboard = false;
   }
-  // wait(1000000);
   start = millis();
 }
 
@@ -213,38 +177,7 @@ void setup() {
 
 bool waiting = true;
 int loops = 0;
-int size = 32000;
-// void loop2() {
-//   while (!(Serial.available() > 0)) {
-//     delay(10);
-//     Serial.println("delaying");
-//   }
-//   // setLight();
-//   Serial.println("done");
-//   delay(10000);
-//   Serial.println("wait done");
-//   auto keyRep1 = Keyboard.getKeyReport();
-//   // JSON.stringify();
-//   toggleKeyboardAccess(true,5);
-//   Keyboard.releaseAll();
-//   auto keyRep2 = Keyboard.getKeyReport();
-//   Serial.print("keys: ");
-//   Serial.println(JSON.stringify(JSONVar(keyRep1.keys)));
-//   Serial.print("whole16: ");
-//   Serial.println(JSON.stringify(JSONVar(keyRep1.whole16)));
-//   Serial.print("whole32: ");
-//   Serial.println(JSON.stringify(JSONVar(keyRep1.whole32)));
-//   Serial.print("whole8: ");
-//   Serial.println(JSON.stringify(JSONVar(keyRep1.whole8)));
-//   Serial.print("keycodes: ");
-//   Serial.println(JSON.stringify(JSONVar(keyRep1.keycodes)));
-//   Serial.print("modifiers: ");
-//   Serial.println(keyRep1.modifiers);
-//   Serial.print("reserved: ");
-//   Serial.println(keyRep1.reserved);
-//   delay(20000);
-//   // Serial.end();
-// }
+int size = 32000; // the size of the screen (of most recent MacBook Air laptops) should only be used if USB VID doesnt match an apple keyboard
 void loop() {
   loops++;
   setLight();
@@ -311,41 +244,5 @@ void loop() {
   if (loops == 400) {
     command(KEY_W);    
   }
-  // if (millis() > (60e3)) {
-  //   LowPower.idle(1000)
-  // }
-  // if(loops >= 4000) {
-  //   Serial.println("start: "+String(start));
-  //   Serial.println("startVisable: "+String(startVisable));
-  //   Serial.println("startTerminal: "+String(startTerminal));
-  //   Serial.println("startOpenTerminal: "+String(startOpenTerminal));
-  //   Serial.println("endOpenTerminal: "+String(endOpenTerminal));
-  //   Serial.println("startPayload: "+String(startPayload));
-  //   Serial.println("endPayload: "+String(endPayload));
-  //   Serial.println("end: "+String(end));
-  //   setLight(false);
-  //   LowPower.sleep(((int)3e4));
-  //   loops += 1e4;
-  // } if(loops >= 30000) {
-  //   Serial.println("start: "+String(start));
-  //   Serial.println("startVisable: "+String(startVisable));
-  //   Serial.println("startTerminal: "+String(startTerminal));
-  //   Serial.println("startOpenTerminal: "+String(startOpenTerminal));
-  //   Serial.println("endOpenTerminal: "+String(endOpenTerminal));
-  //   Serial.println("startPayload: "+String(startPayload));
-  //   Serial.println("endPayload: "+String(endPayload));
-  //   Serial.println("end: "+String(end));
-  //   setLight(false);
-  //   LowPower.deepSleep(((int)3e5));
-  //   loops += 1e5;
-  // } else if ((loops >= 1000) && (loops%1500 == 0)) {
-  //   Serial.println("start: "+String(start));
-  //   Serial.println("startVisable: "+String(startVisable));
-  //   Serial.println("startTerminal: "+String(startTerminal));
-  //   Serial.println("startOpenTerminal: "+String(startOpenTerminal));
-  //   Serial.println("endOpenTerminal: "+String(endOpenTerminal));
-  //   Serial.println("startPayload: "+String(startPayload));
-  //   Serial.println("endPayload: "+String(endPayload));
-  //   Serial.println("end: "+String(end));
-  // }
+  // Done
 }
